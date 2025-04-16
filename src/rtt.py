@@ -1,14 +1,20 @@
 import argparse
-import mysql.connector
+import mariadb
+import sys
 
 
 def get_connection():
-    return mysql.connector.connect(
-        host="fc84.teaching.cs.st-andrews.ac.uk",
-        user="fc84",
-        password="4E6QZk.S42F3fp",
-        database="fc84_P2"
-    )
+    try:
+        connection = mariadb.connect(
+            host="fc84.teaching.cs.st-andrews.ac.uk",
+            user="fc84",
+            password="4E6QZk.S42F3fp",
+            database="fc84_P2"
+        )
+        return connection
+    except mariadb.Error as e:
+        print(f"Error connecting to MariaDB database: {e}")
+        sys.exit(1)
 
 
 def schedule(loc):
