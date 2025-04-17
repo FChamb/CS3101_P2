@@ -18,33 +18,32 @@ def get_connection():
 
 
 def schedule(loc):
-    connection = get_connection()
-    cursor = connection.cursor()
+    conn = get_connection()
+    cursor = conn.cursor()
     try:
-        cursor.execute("SELECT * FROM scheduleEDB WHERE orig = %s", (loc,))
-        result = cursor.fetchall()
-        for row in result:
-            print(row)
+        cursor.execute("SELECT * FROM scheduleEDB")
+        for row in cursor.fetchall():
+            if row[0] == loc:
+                print(row)
     except Exception as e:
         print(f"Error: {e}")
     finally:
         cursor.close()
-        connection.close()
+        conn.close()
 
 
 def service(hc, dep):
-    connection = get_connection()
-    cursor = connection.cursor()
+    conn = get_connection()
+    cursor = conn.cursor()
     try:
-        cursor.execute("SELECT * FROM serviceEDBDEE WHERE hc = %s AND dep = %s", (hc, dep))
-        result = cursor.fetchall()
-        for row in result:
+        cursor.execute("SELECT * FROM serviceEDBDEE")
+        for row in cursor.fetchall():
             print(row)
     except Exception as e:
         print(f"Error: {e}")
     finally:
         cursor.close()
-        connection.close()
+        conn.close()
 
 
 if __name__ == "__main__":
