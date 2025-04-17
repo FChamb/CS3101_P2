@@ -50,7 +50,7 @@ def service(hc, dep):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--schedule", type=str, help="Print station schedule")
-    parser.add_argument("--service", nargs="2", metavar=('hc', 'dep'), help="Service stops")
+    parser.add_argument("--service", nargs=2, metavar=('hc', 'dep'), help="Service stops")
 
     args = parser.parse_args()
 
