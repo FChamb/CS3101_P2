@@ -20,27 +20,42 @@ def get_connection():
 def schedule(loc):
     connection = get_connection()
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM scheduleEDB WHERE orig = %s", (loc,))
-    for row in cursor.fetchall():
-        print(row)
+    try:
+        cursor.execute("SELECT * FROM scheduleEDB WHERE orig = %s", (loc,))
+        result = cursor.fetchall()
+        for row in result:
+            print(row)
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        cursor.close()
+        connection.close()
 
 
 def service(hc, dep):
     connection = get_connection()
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM serviceEDBDEE WHERE hc = %s AND dep = %s", (hc, dep))
-    for row in cursor.fetchall():
-        print(row)
+    try:
+        cursor.execute("SELECT * FROM serviceEDBDEE WHERE hc = %s AND dep = %s", (hc, dep))
+        result = cursor.fetchall()
+        for row in result:
+            print(row)
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        cursor.close()
+        connection.close()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--schedule", type=str, help="Print station schedule")
     parser.add_argument("--service", nargs="2", metavar=('hc', 'dep'), help="Service stops")
+
     args = parser.parse_args()
 
     if args.schedule:
         schedule(args.schedule)
     elif args.service:
-        schedule(args.service)
+        service(args.service[0], args.service[1])
 
