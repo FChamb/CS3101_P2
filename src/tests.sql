@@ -21,3 +21,11 @@ CALL proc_update_diff('1L27', 'Dunfermline', 'Linlithgow', 0, 7);
 -- Check final route and stop times:
 SELECT * FROM stop WHERE hc = '1L27';
 SELECT * FROM plan WHERE hc = '1L27';
+
+
+-- REPORT TESTS:
+-- Should fail: arrival later than departure
+INSERT INTO stop (hc, frm, loc, adh, adm, pl) VALUES ('1L27', 'Edinburgh', 'Haymarket', 10, 45, 2);
+
+-- Should pass: arrival earlier than departure
+INSERT INTO stop (hc, frm, loc, adh, adm, pl) VALUES ('1L27', 'Edinburgh', 'Haymarket', 10, 15, 2);
