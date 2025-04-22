@@ -1,12 +1,17 @@
 C1:
 DELIMITER //
-CREATE TRIGGER trg_stop_arrival_check
-BEFORE INSERT ON stop
+CREATE TRIGGER trg_departure_diff_constraint
+BEFORE INSERT ON plan
 FOR EACH ROW
 BEGIN
-    IF NEW.adh * 60 + NEW.adm > (SELECT dh * 60 + dm FROM service WHERE hc = NEW.hc) THEN
+    DECLARE is_destination BOOLEAN;
+    SET is_destination = NOT EXISTS (
+        SELECT 1 FROM plan WHERE hc = NEW.hc AND frm = NEW.loc
+    );
+
+    IF NOT is_destination AND (NEW.ddh IS NULL OR NEW.ddm IS NULL) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Arrival time cannot be after departure time';
+        SET MESSAGE_TEXT = 'Non-terminal locations must have finite departure differential';
     END IF;
 END;
 //
