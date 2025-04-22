@@ -1,5 +1,20 @@
 C1:
 DELIMITER //
+CREATE TRIGGER trg_stop_arrival_check
+BEFORE INSERT ON stop
+FOR EACH ROW
+BEGIN
+    IF NEW.adh * 60 + NEW.adm > (SELECT dh * 60 + dm FROM service WHERE hc = NEW.hc) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Arrival time cannot be after departure time';
+    END IF;
+END;
+//
+DELIMITER ;
+
+
+C2:
+DELIMITER //
 CREATE TRIGGER trg_departure_diff_constraint
 BEFORE INSERT ON plan
 FOR EACH ROW
@@ -12,21 +27,6 @@ BEGIN
     IF NOT is_destination AND (NEW.ddh IS NULL OR NEW.ddm IS NULL) THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Non-terminal locations must have finite departure differential';
-    END IF;
-END;
-//
-DELIMITER ;
-
-
-C2:
-DELIMITER //
-CREATE TRIGGER trg_plan_diff_check
-BEFORE INSERT ON plan
-FOR EACH ROW
-BEGIN
-    IF NEW.ddh IS NULL OR NEW.ddm IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Departure differential must be finite unless destination';
     END IF;
 END;
 //
