@@ -1,7 +1,7 @@
 /*M!999999\- enable the sandbox mode */ 
 -- MariaDB dump 10.19  Distrib 10.5.27-MariaDB, for Linux (x86_64)
 --
--- Host: localhost    Database: fc84_P2
+-- Host: localhost    Database: anon_P2
 -- ------------------------------------------------------
 -- Server version	10.5.27-MariaDB
 
@@ -104,7 +104,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`fc84`@`%`*/ /*!50003 TRIGGER trg_finite_departure_differentials
+/*!50003 CREATE*/ /*!50017 DEFINER=`anon`@`%`*/ /*!50003 TRIGGER trg_finite_departure_differentials
 BEFORE INSERT ON plan
 FOR EACH ROW
 BEGIN
@@ -282,7 +282,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`fc84`@`%`*/ /*!50003 TRIGGER trg_check_arrival_before_departure
+/*!50003 CREATE*/ /*!50017 DEFINER=`anon`@`%`*/ /*!50003 TRIGGER trg_check_arrival_before_departure
 BEFORE INSERT ON stop
 FOR EACH ROW
 BEGIN
@@ -345,7 +345,7 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
--- Dumping routines for database 'fc84_P2'
+-- Dumping routines for database 'anon_P2'
 --
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
@@ -357,7 +357,7 @@ SET character_set_client = @saved_cs_client;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 DELIMITER ;;
-CREATE DEFINER=`fc84`@`%` PROCEDURE `proc_add_loc`(
+CREATE DEFINER=`anon`@`%` PROCEDURE `proc_add_loc`(
   IN in_hc CHAR(4),
   IN in_loc VARCHAR(255),
   IN in_prev VARCHAR(255),
@@ -422,7 +422,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 DELIMITER ;;
-CREATE DEFINER=`fc84`@`%` PROCEDURE `proc_new_service`(
+CREATE DEFINER=`anon`@`%` PROCEDURE `proc_new_service`(
   IN in_orig CHAR(3),
   IN in_pl INT,
   IN in_dh INT,
@@ -475,7 +475,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`fc84`@`%` SQL SECURITY DEFINER */
+/*!50013 DEFINER=`anon`@`%` SQL SECURITY DEFINER */
 /*!50001 VIEW `scheduleEDB` AS select `s`.`hc` AS `hc`,lpad(`s`.`dh`,2,'0') * 100 + lpad(`s`.`dm`,2,'0') AS `dep`,`s`.`pl` AS `pl`,(select `p2`.`loc` from `plan` `p2` where `p2`.`hc` = `s`.`hc` and (`p2`.`ddh` = 99 or `p2`.`ddm` = 99) limit 1) AS `dest`,count(`c`.`lid`) AS `len`,`s`.`toc` AS `toc` from (((`service` `s` join `train` `t` on(`s`.`uid` = `t`.`uid`)) join `coach` `c` on(`t`.`uid` = `c`.`uid`)) join `route` `r` on(`s`.`hc` = `r`.`hc`)) where `r`.`orig` = 'EDB' group by `s`.`hc`,`s`.`dh`,`s`.`dm`,`s`.`pl`,`s`.`toc` order by lpad(`s`.`dh`,2,'0') * 100 + lpad(`s`.`dm`,2,'0') */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -493,7 +493,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`fc84`@`%` SQL SECURITY DEFINER */
+/*!50013 DEFINER=`anon`@`%` SQL SECURITY DEFINER */
 /*!50001 VIEW `serviceEDBDEE` AS select `p`.`loc` AS `loc`,`s`.`code` AS `stn`,`st`.`pl` AS `pl`,`st`.`adh` * 100 + `st`.`adm` AS `arr`,case when `p`.`ddh` = 99 or `p`.`ddm` = 99 then NULL else `p`.`ddh` * 100 + `p`.`ddm` end AS `dep` from (((`service` `sv` join `plan` `p` on(`sv`.`hc` = `p`.`hc`)) left join `stop` `st` on(`p`.`hc` = `st`.`hc` and `p`.`loc` = `st`.`loc`)) left join `station` `s` on(`p`.`loc` = `s`.`loc`)) where `sv`.`hc` = '1L27' and `sv`.`dh` = 18 and `sv`.`dm` = 59 order by `p`.`frm` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -511,7 +511,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`fc84`@`%` SQL SECURITY DEFINER */
+/*!50013 DEFINER=`anon`@`%` SQL SECURITY DEFINER */
 /*!50001 VIEW `trainLEV` AS select `s`.`hc` AS `hc`,`r`.`orig` AS `orig`,lpad(`s`.`dh`,2,'0') * 100 + lpad(`s`.`dm`,2,'0') AS `dep` from (`service` `s` join `route` `r` on(`s`.`hc` = `r`.`hc`)) where `s`.`uid` = 170406 order by lpad(`s`.`dh`,2,'0') * 100 + lpad(`s`.`dm`,2,'0') */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
