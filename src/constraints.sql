@@ -1,4 +1,5 @@
 C1:
+DELIMITER //
 CREATE TRIGGER trg_stop_arrival_check
 BEFORE INSERT ON stop
 FOR EACH ROW
@@ -8,9 +9,12 @@ BEGIN
         SET MESSAGE_TEXT = 'Arrival time cannot be after departure time';
     END IF;
 END;
+//
+DELIMITER ;
 
 
 C2:
+DELIMITER //
 CREATE TRIGGER trg_plan_diff_check
 BEFORE INSERT ON plan
 FOR EACH ROW
@@ -20,8 +24,11 @@ BEGIN
         SET MESSAGE_TEXT = 'Departure differential must be finite unless destination';
     END IF;
 END;
+//
+DELIMITER ;
 
 C3:
+DELIMITER //
 CREATE TRIGGER trg_train_service_unique
 BEFORE INSERT ON service
 FOR EACH ROW
@@ -34,17 +41,22 @@ BEGIN
         SET MESSAGE_TEXT = 'Train already used at that time';
     END IF;
 END;
-
+//
+DELIMITER ;
 
 Q1:
+DELIMITER //
 CREATE VIEW trainLEV AS
 SELECT s.hc, r.orig AS orig, CONCAT(s.dh, LPAD(s.dm, 2, '0')) AS dep
 FROM service s
 JOIN route r ON s.hc = r.hc
 WHERE s.uid = 170406
 ORDER BY s.dh, s.dm;
+//
+DELIMITER ;
 
 Q2:
+DELIMITER //
 CREATE VIEW scheduleEDB AS
 SELECT s.hc, CONCAT(s.dh, LPAD(s.dm, 2, '0')) AS dep, s.pl,
        (SELECT p.loc FROM plan p WHERE p.hc = s.hc AND p.ddh = 'ω') AS dest,
@@ -54,8 +66,11 @@ FROM service s
 JOIN route r ON s.hc = r.hc
 WHERE r.orig = 'Edinburgh'
 ORDER BY s.dh, s.dm;
+//
+DELIMITER ;
 
 Q3:
+DELIMITER //
 CREATE VIEW serviceEDBDEE AS
 SELECT p.loc, st.code AS stn, stp.pl,
        CONCAT(s.dh + p.ddh, LPAD(s.dm + p.ddm, 2, '0')) AS arr,
@@ -66,6 +81,8 @@ LEFT JOIN stop stp ON stp.hc = p.hc AND stp.loc = p.loc
 LEFT JOIN station st ON st.loc = p.loc
 WHERE s.hc = '1L27' AND s.dh = 18 AND s.dm = 59
 ORDER BY p.ddh, p.ddm;
+//
+DELIMITER ;
 
 P1:
 DELIMITER //

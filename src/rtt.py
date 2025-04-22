@@ -5,6 +5,7 @@ import sys
 
 def get_connection():
     try:
+        # THIS NEEDS TO BE ALTERED TO THE USER'S MARIADB CONNECTION!!
         connection = mariadb.connect(
             host="fc84.teaching.cs.st-andrews.ac.uk",
             user="fc84",
