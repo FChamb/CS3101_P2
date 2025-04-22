@@ -42,3 +42,5 @@ END;
 ALTER TABLE service
 ADD CONSTRAINT unique_train_schedule
 UNIQUE (uid, dh, dm);
+//
+DELIMITER ;

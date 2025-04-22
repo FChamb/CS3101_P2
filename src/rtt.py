@@ -22,9 +22,7 @@ def schedule(loc):
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT hc, dep, pl, dest, len, toc"
-                       "FROM scheduleEDB"
-                       "WHERE dest IS NOT NULL AND EXISTS (SELECT 1 FROM route WHERE orig = %s)", (loc,))
+        cursor.execute("SELECT hc, dep, pl, dest, len, toc FROM scheduleEDB WHERE dest IS NOT NULL AND EXISTS (SELECT 1 FROM route WHERE orig = %s)", (loc,))
         rows = cursor.fetchall()
         if not rows:
             print(f"No services found for location '{loc}'")
@@ -46,11 +44,7 @@ def service(hc, dep):
     try:
         hour = int(dep[:2])
         minute = int(dep[2:])
-        cursor.execute("SELECT loc, stn, pl, arr, dep"
-                       "FROM serviceEDBDEE"
-                       "WHERE hc = %s "
-                       "AND EXISTS (SELECT 1 FROM service WHERE hc = %s AND dh = %s AND dm = %s) "
-                       "ORDER BY arr", (hc, hc, hour, minute))
+        cursor.execute("SELECT loc, stn, pl, arr, dep FROM serviceEDBDEE WHERE hc = %s AND EXISTS (SELECT 1 FROM service WHERE hc = %s AND dh = %s AND dm = %s) ORDER BY arr", (hc, hc, hour, minute))
         rows = cursor.fetchall()
         if not rows:
             print(f"No stops found for service {hc} at {dep}")
